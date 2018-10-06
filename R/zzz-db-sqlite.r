@@ -16,24 +16,39 @@ sqlite_version <- function() {
 #' @export
 sql_translate_env.SQLiteConnection <- function(con) {
   sql_variant(
-    sql_translator(.parent = base_scalar,
-      log     = function(x, base = exp(1)) {
-        if (base != exp(1)) {
-          sql_expr(log(!!x) / log(!!base))
-        } else {
-          sql_expr(log(!!x))
-        }
-      },
-      na_if = sql_prefix("NULLIF", 2),
-      paste = sql_paste_infix(" ", "||", function(x) sql_expr(cast(UQ(x) %as% text))),
-      paste0 = sql_paste_infix("", "||", function(x) sql_expr(cast(UQ(x) %as% text)))
-    ),
-    sql_translator(.parent = base_agg,
-      sd = sql_aggregate("stdev")
-    ),
-    base_no_win
+    base_sqlite_scalar,
+    base_sqlite_agg,
+    base_sqlite_win
   )
 }
+
+#' @export
+#' @rdname sql_variant
+#' @format NULL
+base_sqlite_scalar <- sql_translator(.parent = base_scalar,
+     log = function(x, base = exp(1)) {
+       if (base != exp(1)) {
+         sql_expr(log(!!x) / log(!!base))
+       } else {
+         sql_expr(log(!!x))
+       }
+     },
+     na_if = sql_prefix("NULLIF", 2),
+     paste = sql_paste_infix(" ", "||", function(x) sql_expr(cast(UQ(x) %as% text))),
+     paste0 = sql_paste_infix("", "||", function(x) sql_expr(cast(UQ(x) %as% text)))
+)
+
+#' @export
+#' @rdname sql_variant
+#' @format NULL
+base_sqlite_agg <- sql_translator(.parent = base_agg,
+  sd = sql_aggregate("stdev")
+)
+
+#' @export
+#' @rdname sql_variant
+#' @format NULL
+base_sqlite_win <- base_no_win
 
 #' @export
 sql_escape_ident.SQLiteConnection <- function(con, x) {

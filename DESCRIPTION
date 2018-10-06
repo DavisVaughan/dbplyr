@@ -61,7 +61,6 @@ Collate:
     'db-odbc-teradata.R'
     'db-postgres.r'
     'db-roracle.R'
-    'db-sqlite.r'
     'dbi-s3.r'
     'dbplyr.R'
     'do.r'
@@ -98,4 +97,5 @@ Collate:
     'translate-sql.r'
     'utils-format.r'
     'window.R'
+    'zzz-db-sqlite.r'
     'zzz.R'
